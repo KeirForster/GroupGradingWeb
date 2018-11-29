@@ -14,8 +14,7 @@ import { TokenPayloadModel } from './model/token-model';
     providedIn: 'root'
 })
 export class AuthService {
-    private static readonly LOGIN_URL =
-        'https://groupgradingapi.azurewebsites.net/login';
+    private static readonly LOGIN_URL = 'https://groupgradingapi.azurewebsites.net/login';
     private static readonly TOKEN_NAME = 'token';
     private static readonly LOGIN_SUCCESS_MSG = 'login success';
     readonly authenticationStatus: Subject<boolean>; // for broadcasting changes in auth status
