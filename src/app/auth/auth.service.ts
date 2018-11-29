@@ -1,10 +1,6 @@
 // Angular modules
 import { Injectable } from '@angular/core';
-import {
-    HttpClient,
-    HttpErrorResponse,
-    HttpHeaders
-} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 
@@ -21,7 +17,6 @@ export class AuthService {
     private static readonly LOGIN_URL =
         'https://groupgradingapi.azurewebsites.net/login';
     private static readonly TOKEN_NAME = 'token';
-    private static readonly INVALID_TOKEN_MSG = 'invalid token';
     private static readonly LOGIN_SUCCESS_MSG = 'login success';
     readonly authenticationStatus: Subject<boolean>; // for broadcasting changes in auth status
     private authenticated: boolean; // current user's authentication status
@@ -85,15 +80,23 @@ export class AuthService {
 
         // not authenticated (user potentially refreshed the browser)
         // attempt to retrieve stored token
-        const token = this.getToken();
+        const rawToken = this.getRawToken();
 
-        if (token) {
-            // valid token
-            return true;
+        if (rawToken) {
+            // jwt token
+            const parsedToken = this.parseToken(rawToken);
+
+            if (this.tokenIsExpired(parsedToken)) {
+                // token is expired
+                return false;
+            } else {
+                // token is not expired
+                return true;
+            }
+        } else {
+            // no jwt token found
+            return false;
         }
-
-        // no valid token found
-        return false;
     }
 
     /**
@@ -107,38 +110,54 @@ export class AuthService {
      */
     isInRole(roleName: ApplicationRole): boolean {
         if (this.isAuthenticated()) {
-            // user is authenticated
+            // user is authenticated (valid token found)
 
-            // get the token from storage
-            const token = this.getToken();
+            // get the parsed token
+            const token = this.parseToken(this.getRawToken());
 
-            if (token) {
-                // token is valid
-                if (token.roles.includes(roleName)) {
-                    // user is in the specified role
-                    return true;
-                } else {
-                    // user is not in the specified role
-                    return false;
-                }
+            if (token.roles.includes(roleName)) {
+                // user is in the specified role
+                return true;
             } else {
-                // token is invalid
+                // user is not in the specified role
                 return false;
             }
+        } else {
+            // user is not authenticated
+            return false;
         }
-
-        // user is not authenticated
-        return false;
     }
 
     /**
-     * Retrive a token from the browser.
+     * Get the current user's username
      *
-     * @returns a `TokenPayloadModel` object or null if no valid token is found
+     * @returns the the current user's username or null if not authenticated
+     *
+     * @publicApi
+     */
+    getUsername(): string | null {
+        if (this.isAuthenticated()) {
+            // user is authenticated (valid token found)
+
+            // get the parsed token
+            const token = this.parseToken(this.getRawToken());
+
+            // return the token subject
+            return token.sub;
+        } else {
+            // user is not authenticated
+            return null;
+        }
+    }
+
+    /**
+     * Retrieve a raw jwt token from the browser.
+     *
+     * @returns a raw jwt token or null if no jwt token is found
      *
      * @privateApi
      */
-    private getToken(): TokenPayloadModel {
+    private getRawToken(): string | null {
         const sessionStorageToken = sessionStorage.getItem(
             AuthService.TOKEN_NAME
         );
@@ -147,35 +166,35 @@ export class AuthService {
         // attempt to get token from session storage first
         if (sessionStorageToken) {
             // validate token
-            if (this.tokenIsValid(sessionStorageToken)) {
+            if (this.tokenIsJwtFormat(sessionStorageToken)) {
                 // return parsed token
-                return this.parseToken(sessionStorageToken);
+                return sessionStorageToken;
             }
         }
 
         // attempt to get token from local storage
         if (localStorageToken) {
             // validate token
-            if (this.tokenIsValid(localStorageToken)) {
+            if (this.tokenIsJwtFormat(localStorageToken)) {
                 // return parsed token
-                return this.parseToken(localStorageToken);
+                return localStorageToken;
             }
         }
 
-        // no valid token found
+        // no jwt token found
         return null;
     }
 
     /**
-     * Check if the raw token is valid.
+     * Check if the raw token is a jwt token.
      *
-     * @param rawToken the token to validate
+     * @param rawToken the raw token to validate
      *
-     * @returns whether or not the token is valid
+     * @returns whether or not the token is a jwt token
      *
      * @privateApi
      */
-    private tokenIsValid(rawToken: string): boolean {
+    private tokenIsJwtFormat(rawToken: string): boolean {
         if (!rawToken) {
             // no token
             return false;
@@ -184,9 +203,6 @@ export class AuthService {
             return false;
         } else if (rawToken.split('.').length !== 3) {
             // invalid jwt token format
-            return false;
-        } else if (this.tokenIsExpired(this.parseToken(rawToken))) {
-            // token has expired
             return false;
         } else {
             // valid token
@@ -217,7 +233,7 @@ export class AuthService {
      *
      * @param rawToken the raw token to parse
      *
-     * @returns if the token is expired
+     * @returns a `TokenPayloadModel` object
      *
      * @privateApi
      */
@@ -238,7 +254,7 @@ export class AuthService {
         let roles: ApplicationRole[];
         const userRoles = payload.roles;
         if (Array.isArray(userRoles)) {
-            roles = [...roles];
+            roles = userRoles;
         } else {
             roles = [userRoles];
         }
@@ -280,15 +296,15 @@ export class AuthService {
         remember: boolean
     ): void {
         if (remember) {
-            // remove when user closes the browser tab
-            sessionStorage.setItem(AuthService.TOKEN_NAME, responseBody.token);
-            // remove any previously stored local storage token
-            localStorage.removeItem(AuthService.TOKEN_NAME);
-        } else {
             // keep token after user closes the browser tab
             localStorage.setItem(AuthService.TOKEN_NAME, responseBody.token);
             // remove any previously stored session token
             sessionStorage.removeItem(AuthService.TOKEN_NAME);
+        } else {
+            // remove when user closes the browser tab
+            sessionStorage.setItem(AuthService.TOKEN_NAME, responseBody.token);
+            // remove any previously stored local storage token
+            localStorage.removeItem(AuthService.TOKEN_NAME);
         }
 
         // set authentication status

@@ -1,6 +1,7 @@
 // Angular modules
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
 
 // App
 import { faSync } from '@fortawesome/free-solid-svg-icons';
@@ -16,14 +17,19 @@ export class AuthComponent implements OnInit {
     readonly faSync: any; // sync icon for signin button
     readonly loginForm: FormGroup;
     submitted: boolean;
+    errorMsg: string;
 
-    constructor(private fb: FormBuilder, private authService: AuthService) {
+    constructor(
+        private fb: FormBuilder,
+        private authService: AuthService,
+        private router: Router
+    ) {
         this.submitted = false;
         this.faSync = faSync;
         this.loginForm = this.setLoginForm();
     }
 
-    ngOnInit() {}
+    ngOnInit(): void {}
 
     onSubmit(): void {
         this.submitted = true;
@@ -32,9 +38,9 @@ export class AuthComponent implements OnInit {
 
     private setLoginForm(): FormGroup {
         return this.fb.group({
-            username: [null, [Validators.required, Validators.minLength(1)]],
-            password: [null, [Validators.required, Validators.minLength(6)]],
-            remember: [null, []]
+            username: [null, [Validators.required]],
+            password: [null, [Validators.required]],
+            remember: [null]
         });
     }
 
@@ -54,9 +60,16 @@ export class AuthComponent implements OnInit {
 
         this.authService.login(userCredentials, remember).subscribe(
             (res: String) => {
+                // successful login
                 console.log(res);
+
+                // redirect to home
+                this.router.navigate(['/home']);
             },
             error => {
+                // invalid login attempt
+                this.submitted = false;
+                this.errorMsg = error;
                 console.log(error);
             }
         );

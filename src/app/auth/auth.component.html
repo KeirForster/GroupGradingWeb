@@ -9,9 +9,9 @@
 
                 <!-- Card content -->
                 <mdb-card-body class="px-lg-5 pt-0">
-                    <div *ngIf="!loginForm.valid && submitted" class="col-12">
+                    <div *ngIf="!submitted && errorMsg" class="col-12">
                         <h5 class="text-danger text-center">
-                            Invalid login credentials
+                            {{ errorMsg }}
                         </h5>
                     </div>
 
@@ -29,6 +29,7 @@
                                 type="text"
                                 id="username"
                                 class="form-control"
+                                autocomplete="username"
                                 mdbInputDirective
                                 formControlName="username"
                                 data-error="You must provide a username"
@@ -44,6 +45,7 @@
                                 type="password"
                                 id="materialLoginFormPassword"
                                 class="form-control"
+                                autocomplete="password"
                                 mdbInputDirective
                                 formControlName="password"
                                 data-error="Length must be at least 6"
@@ -59,7 +61,6 @@
                                 <!-- Remember me -->
                                 <mdb-checkbox
                                     [default]="true"
-                                    [checked]="true"
                                     formControlName="remember"
                                     >Remember me</mdb-checkbox
                                 >
