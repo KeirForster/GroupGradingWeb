@@ -9,30 +9,45 @@
 
                 <!-- Card content -->
                 <mdb-card-body class="px-lg-5 pt-0">
+                    <div *ngIf="!loginForm.valid && submitted" class="col-12">
+                        <h5 class="text-danger text-center">
+                            Invalid login credentials
+                        </h5>
+                    </div>
+
                     <!-- Form -->
                     <form
                         class="text-center"
                         style="color: #757575;"
-                        [formGroup]="signinForm"
+                        [formGroup]="loginForm"
+                        (ngSubmit)="onSubmit()"
                     >
-                        <!-- Email -->
+                        <!-- Username -->
                         <div class="md-form">
+                            <i class="fa fa-envelope prefix"></i>
                             <input
-                                type="email"
-                                id="materialLoginFormEmail"
+                                type="text"
+                                id="username"
                                 class="form-control"
                                 mdbInputDirective
+                                formControlName="username"
+                                data-error="You must provide a username"
+                                data-success=" "
                             />
-                            <label for="materialLoginFormEmail">E-mail</label>
+                            <label for="username">Username</label>
                         </div>
 
                         <!-- Password -->
                         <div class="md-form">
+                            <i class="fa fa-lock prefix"></i>
                             <input
                                 type="password"
                                 id="materialLoginFormPassword"
                                 class="form-control"
                                 mdbInputDirective
+                                formControlName="password"
+                                data-error="Length must be at least 6"
+                                data-success=" "
                             />
                             <label for="materialLoginFormPassword"
                                 >Password</label
@@ -42,11 +57,12 @@
                         <div class="d-flex justify-content-around">
                             <div>
                                 <!-- Remember me -->
-                                <mdb-checkbox>Remember me</mdb-checkbox>
-                            </div>
-                            <div>
-                                <!-- Forgot password -->
-                                <a href="">Forgot password?</a>
+                                <mdb-checkbox
+                                    [default]="true"
+                                    [checked]="true"
+                                    formControlName="remember"
+                                    >Remember me</mdb-checkbox
+                                >
                             </div>
                         </div>
 
@@ -60,12 +76,29 @@
                             class="my-4 waves-effect z-depth-0"
                             mdbWavesEffect
                             type="submit"
+                            [disabled]="!loginForm.valid || submitted"
                         >
-                            Sign in
+                            <!-- show spinner icon when form is submitted -->
+                            <span
+                                *ngIf="submitted"
+                                class="position-absolute"
+                                class="pr-2"
+                            >
+                                <fa-icon
+                                    [icon]="faSync"
+                                    [spin]="true"
+                                ></fa-icon>
+                            </span>
+                            {{ submitted ? 'SIGNING IN...' : 'SIGN IN' }}
                         </button>
 
                         <!-- Register -->
-                        <p>Not a member? <a href="">Register</a></p>
+                        <p>
+                            Not a member?
+                            <a class="disabled" style="cursor: no-drop"
+                                >Register</a
+                            >
+                        </p>
 
                         <!-- Social login -->
                         <p>or sign in with:</p>

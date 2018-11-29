@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 // app modules
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { AppRoutingModule } from './app-routing.module';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // components
 import { AppComponent } from './app.component';
@@ -20,6 +21,7 @@ import { AuthComponent } from './auth/auth.component';
         BrowserModule,
         MDBBootstrapModule.forRoot(),
         ReactiveFormsModule,
+        FontAwesomeModule,
         AppRoutingModule
     ],
     providers: [],

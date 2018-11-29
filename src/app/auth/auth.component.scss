@@ -1,12 +1,14 @@
 // node_modules
-@import '~angular-bootstrap-md/scss/bootstrap/functions';
-@import '~angular-bootstrap-md/scss/bootstrap/variables';
-@import '~angular-bootstrap-md/scss/bootstrap/mixins';
+@import '~angular-bootstrap-md/scss/core/colors';
 
 .page-wrapper {
     width: 100vw;
     height: 100vh;
-    background: $gray-700;
+    background: $stylish-color;
     overflow-x: hidden;
     overflow-y: hidden;
+}
+
+.fa {
+    left: 0;
 }
