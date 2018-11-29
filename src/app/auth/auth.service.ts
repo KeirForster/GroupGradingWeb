@@ -243,7 +243,7 @@ export class AuthService {
         const payload = JSON.parse(atob(payloadBase64Url));
 
         // username
-        const sub = payload.sub; // username
+        const sub = payload.sub;
 
         // token expiration
         const expDate = new Date(0); // begining of UTC converted to local timezone
