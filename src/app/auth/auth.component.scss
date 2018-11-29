@@ -1,0 +1,12 @@
+// node_modules
+@import '~angular-bootstrap-md/scss/bootstrap/functions';
+@import '~angular-bootstrap-md/scss/bootstrap/variables';
+@import '~angular-bootstrap-md/scss/bootstrap/mixins';
+
+.page-wrapper {
+    width: 100vw;
+    height: 100vh;
+    background: $gray-700;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
