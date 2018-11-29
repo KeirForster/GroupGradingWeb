@@ -30,7 +30,7 @@ export class AuthService {
      * Authenticate a user against the server.
      *
      * @param user a user to be authenticated
-     * @param remember wether or not to remember the user during their next visit
+     * @param remember whether or not to remember the user during their next visit
      *
      * @returns an `Observable` with a message upon success.
      *
@@ -165,18 +165,18 @@ export class AuthService {
 
         // attempt to get token from session storage first
         if (sessionStorageToken) {
-            // validate token
+            // validate token format
             if (this.tokenIsJwtFormat(sessionStorageToken)) {
-                // return parsed token
+                // return raw token
                 return sessionStorageToken;
             }
         }
 
         // attempt to get token from local storage
         if (localStorageToken) {
-            // validate token
+            // validate token format
             if (this.tokenIsJwtFormat(localStorageToken)) {
-                // return parsed token
+                // return raw token
                 return localStorageToken;
             }
         }
@@ -220,18 +220,33 @@ export class AuthService {
      * @privateApi
      */
     private tokenIsExpired(parsedToken: TokenPayloadModel): boolean {
+        // local date
         const now = new Date();
-        const nowMilli = now.getTime();
-        const expMilli = parsedToken.exp.getTime();
-        return expMilli - nowMilli < 0;
+
+        // local date in milliseconds
+        const nowInMilli = now.getTime();
+
+        // token expiration in milliseconds
+        const expInMilli = parsedToken.exp.getTime();
+
+        // token expiration - now
+        const timeDifference = expInMilli - nowInMilli;
+
+        if (timeDifference < 0) {
+            // token has expired
+            return true;
+        } else {
+            // token is valid
+            return false;
+        }
     }
 
     /**
-     * Parse the valid raw token.
-     * This method assumes a validated token and
-     * should only be called after calling the `tokenIsValid()` method
+     * Parse the raw jwt token.
+     * This method assumes a valid jwt token and should only
+     * be called after calling the `tokenIsJwtFormat()` method
      *
-     * @param rawToken the raw token to parse
+     * @param rawToken the raw jwt token to parse
      *
      * @returns a `TokenPayloadModel` object
      *
@@ -245,10 +260,14 @@ export class AuthService {
         // username
         const sub = payload.sub;
 
-        // token expiration
-        const expDate = new Date(0); // begining of UTC converted to local timezone
-        expDate.setUTCSeconds(payload.exp); // add number of seconds to expiration
-        const exp = expDate; // token expiration in local timezone
+        // begining of UTC converted to local timezone
+        const exp = new Date(0);
+
+        // parsed token expiration in milliseconds
+        const payloadExpInMillis = payload.exp;
+
+        // add number of milliseconds to expiration
+        exp.setUTCSeconds(payloadExpInMillis);
 
         // user roles
         let roles: ApplicationRole[];
