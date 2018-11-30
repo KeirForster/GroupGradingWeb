@@ -1,4 +1,6 @@
-<div class="container-fluid page-wrapper d-flex align-items-center grey lighten-4">
+<div
+    class="container-fluid page-wrapper d-flex align-items-center grey lighten-4"
+>
     <div class="row justify-content-center w-100">
         <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
             <!-- Material form login -->
@@ -10,9 +12,7 @@
                 <!-- Card content -->
                 <mdb-card-body class="px-lg-5 pt-0">
                     <div *ngIf="!submitted && errorMsg" class="col-12">
-                        <h5 class="text-danger text-center">
-                            {{ errorMsg }}
-                        </h5>
+                        <h5 class="text-danger text-center">{{ errorMsg }}</h5>
                     </div>
 
                     <!-- Form -->
@@ -70,11 +70,11 @@
                         <!-- Sign in button -->
                         <button
                             mdbBtn
-                            color="info"
+                            color="white-text"
                             outline="true"
                             rounded="true"
                             block="true"
-                            class="my-4 waves-effect z-depth-0"
+                            class="my-4 waves-effect z-depth-0 info-color"
                             mdbWavesEffect
                             type="submit"
                             [disabled]="!loginForm.valid || submitted"
@@ -96,25 +96,8 @@
                         <!-- Register -->
                         <p>
                             Not a member?
-                            <a class="disabled" style="cursor: no-drop"
-                                >Register</a
-                            >
+                            <a routerLink="/register">Register</a>
                         </p>
-
-                        <!-- Social login -->
-                        <p>or sign in with:</p>
-                        <a type="button" class="btn-floating btn-fb btn-sm">
-                            <mdb-icon icon="facebook"></mdb-icon>
-                        </a>
-                        <a type="button" class="btn-floating btn-tw btn-sm">
-                            <mdb-icon icon="twitter"></mdb-icon>
-                        </a>
-                        <a type="button" class="btn-floating btn-li btn-sm">
-                            <mdb-icon icon="linkedin"></mdb-icon>
-                        </a>
-                        <a type="button" class="btn-floating btn-git btn-sm">
-                            <mdb-icon icon="github"></mdb-icon>
-                        </a>
                     </form>
                     <!-- Form -->
                 </mdb-card-body>

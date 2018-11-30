@@ -5,15 +5,15 @@ import { Router } from '@angular/router';
 
 // App
 import { faSync } from '@fortawesome/free-solid-svg-icons';
-import { AuthService } from './auth.service';
-import { CredentialModel } from './model/credential-model';
+import { AuthService } from '../auth.service';
+import { CredentialModel } from '../model/credential-model';
 
 @Component({
-    selector: 'app-auth',
-    templateUrl: './auth.component.html',
-    styleUrls: ['./auth.component.scss']
+    selector: 'app-login',
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.scss']
 })
-export class AuthComponent implements OnInit {
+export class LoginComponent implements OnInit {
     readonly faSync: any; // sync icon for signin button
     readonly loginForm: FormGroup;
     submitted: boolean;
@@ -45,6 +45,9 @@ export class AuthComponent implements OnInit {
     }
 
     private login(): void {
+        // clear any previous errors
+        this.errorMsg = undefined;
+
         const userName = this.loginForm.get('username').value;
         const password = this.loginForm.get('password').value;
         const remember = this.loginForm.get('remember').value;

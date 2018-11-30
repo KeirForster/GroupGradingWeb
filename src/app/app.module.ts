@@ -11,11 +11,17 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // components
 import { AppComponent } from './app.component';
-import { AuthComponent } from './auth/auth.component';
 import { HomeComponent } from './home/home.component';
+import { LoginComponent } from './auth/login/login.component';
+import { RegisterComponent } from './auth/register/register.component';
 
 @NgModule({
-    declarations: [AppComponent, AuthComponent, HomeComponent],
+    declarations: [
+        AppComponent,
+        HomeComponent,
+        RegisterComponent,
+        LoginComponent
+    ],
     imports: [
         BrowserModule,
         FontAwesomeModule,

@@ -1,0 +1,188 @@
+<div
+    class="container-fluid page-wrapper d-flex align-items-center grey lighten-4"
+>
+    <div class="row justify-content-center w-100">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <!-- Material form login -->
+            <mdb-card>
+                <mdb-card-header class="info-color white-text text-center py-4">
+                    <h5><strong>Register</strong></h5>
+                </mdb-card-header>
+
+                <!-- Card content -->
+                <mdb-card-body class="px-lg-5 pt-0">
+                    <!--
+                        <div *ngIf="!submitted && errorMsg" class="col-12">
+                            <h5 class="text-danger text-center">{{ errorMsg }}</h5>
+                        </div>
+                    -->
+
+                    <!-- Form -->
+                    <form
+                        class="text-center"
+                        style="color: #757575;"
+                        [formGroup]="registerForm"
+                        (ngSubmit)="onSubmit()"
+                    >
+                        <div class="form-row">
+                            <div class="col">
+                                <!-- First Name -->
+                                <div class="md-form">
+                                    <!-- <i class="fa fa-lock prefix"></i> -->
+                                    <input
+                                        type="text"
+                                        id="firstName"
+                                        class="form-control"
+                                        autocomplete="firstName"
+                                        mdbInputDirective
+                                        formControlName="firstName"
+                                        data-success=" "
+                                    />
+                                    <label for="firstName">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <!-- Last Name -->
+                                <div class="md-form">
+                                    <!-- <i class="fa fa-lock prefix"></i> -->
+                                    <input
+                                        type="text"
+                                        id="lastName"
+                                        class="form-control"
+                                        id="lastName"
+                                        autocomplete="lastName"
+                                        mdbInputDirective
+                                        id="lastName"
+                                        formControlName="lastName"
+                                        data-success=" "
+                                    />
+                                    <label for="lastName">Last Name</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="md-form mt-0">
+                            <input
+                                type="email"
+                                id="email"
+                                class="form-control"
+                                autocomplete="userName"
+                                mdbInputDirective
+                                formControlName="email"
+                                data-error="You must provide an email"
+                                data-success=" "
+                            />
+                            <label for="email">Email</label>
+                        </div>
+
+                        <!-- Username -->
+                        <div class="md-form">
+                            <input
+                                type="text"
+                                id="userName"
+                                class="form-control"
+                                autocomplete="userName"
+                                mdbInputDirective
+                                formControlName="userName"
+                                data-error="You must provide a username"
+                                data-success=" "
+                            />
+                            <label for="userName">Username</label>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="md-form">
+                            <input
+                                type="password"
+                                id="password"
+                                class="form-control"
+                                autocomplete="password"
+                                mdbInputDirective
+                                formControlName="password"
+                                data-error="Length must be at least 6"
+                                data-success=" "
+                            />
+                            <label for="password">Password</label>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col">
+                                <!-- Student -->
+                                <div class="custom-control custom-radio">
+                                    <input
+                                        type="radio"
+                                        class="custom-control-input"
+                                        id="student"
+                                        value="student"
+                                        [checked]="true"
+                                        mdbInputDirective
+                                        formControlName="role"
+                                        data-success=" "
+                                    />
+                                    <label
+                                        class="custom-control-label"
+                                        for="student"
+                                        >Student</label
+                                    >
+                                </div>
+                            </div>
+                            <div class="col">
+                                <!-- Teacher -->
+                                <div class="custom-control custom-radio">
+                                    <input
+                                        type="radio"
+                                        class="custom-control-input"
+                                        id="teacher"
+                                        value="teacher"
+                                        mdbInputDirective
+                                        formControlName="role"
+                                        data-success=" "
+                                    />
+                                    <label
+                                        class="custom-control-label"
+                                        for="teacher"
+                                        >Teacher</label
+                                    >
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Sign in button -->
+                        <button
+                            mdbBtn
+                            color="white-text"
+                            outline="true"
+                            rounded="true"
+                            block="true"
+                            class="my-4 waves-effect z-depth-0 info-color"
+                            mdbWavesEffect
+                            type="submit"
+                            [disabled]="!registerForm.valid || submitted"
+                        >
+                            <!-- show spinner icon when form is submitted -->
+                            <span
+                                *ngIf="submitted"
+                                class="position-absolute"
+                                class="pr-2"
+                            >
+                                <fa-icon
+                                    [icon]="faSync"
+                                    [spin]="true"
+                                ></fa-icon>
+                            </span>
+                            {{ submitted ? 'SIGNING UP...' : 'SIGN UP' }}
+                        </button>
+
+                        <!-- Register -->
+                        <p>
+                            Already a member? <a routerLink="/login">Sign in</a>
+                        </p>
+                    </form>
+                    <!-- Form -->
+                </mdb-card-body>
+            </mdb-card>
+            <!-- Material form login -->
+        </div>
+    </div>
+</div>

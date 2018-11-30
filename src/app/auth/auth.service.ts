@@ -9,14 +9,19 @@ import { ApplicationRole } from './model/application-role.enum';
 import { CredentialModel } from './model/credential-model';
 import { LoginSuccessModel } from './model/login-success-model';
 import { TokenPayloadModel } from './model/token-model';
+import { RegistrationModel } from './model/registration-model';
+import { RegistrationSuccessModel } from './model/registration-success-model';
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthService {
-    private static readonly LOGIN_URL = 'https://groupgradingapi.azurewebsites.net/login';
+    private static readonly LOGIN_URL = 'https://groupgradingapi.azurewebsites.net/api/login';
+    private static readonly STUDENT_REGISTER_URL = 'https://groupgradingapi.azurewebsites.net/api/student/register';
+    private static readonly TEACHER_REGISTER_URL = 'https://groupgradingapi.azurewebsites.net/api/teacher/register';
     private static readonly TOKEN_NAME = 'token';
     private static readonly LOGIN_SUCCESS_MSG = 'login success';
+    private static readonly REGISTER_SUCCESS_MSG = 'registration success';
     readonly authenticationStatus: Subject<boolean>; // for broadcasting changes in auth status
     private authenticated: boolean; // current user's authentication status
 
@@ -62,6 +67,33 @@ export class AuthService {
         localStorage.removeItem(AuthService.TOKEN_NAME);
         this.authenticated = false;
         this.authenticationStatus.next(false); // broadcast updated auth status to subscribers
+    }
+
+    /**
+     * Register a user in the application
+     *
+     * @param user a user to be registered
+     * @param role the application role to be registered as
+     *
+     * @returns an `Observable` with a message upon success.
+     *
+     * @publicApi
+     */
+    register(
+        user: RegistrationModel,
+        role: ApplicationRole
+    ): Observable<string> {
+        const url = this.getRegistrationUrlGivenRole(role);
+        return this.http
+            .post(url, user, {
+                observe: 'response'
+            })
+            .pipe(
+                // pass back a success message
+                map(res => AuthService.REGISTER_SUCCESS_MSG),
+                // handle error
+                catchError(this.handleError)
+            );
     }
 
     /**
@@ -146,6 +178,25 @@ export class AuthService {
         } else {
             // user is not authenticated
             return null;
+        }
+    }
+
+    /**
+     * Get the registration endpoint for the specified role
+     *
+     * @param role the application role name to get the endpoint for
+     *
+     * @returns the the registration url for the specified application role
+     *
+     * @privateApi
+     */
+    private getRegistrationUrlGivenRole(role: ApplicationRole): string {
+        switch (role) {
+            case ApplicationRole.Student:
+                return AuthService.STUDENT_REGISTER_URL;
+
+            default:
+                return AuthService.TEACHER_REGISTER_URL;
         }
     }
 
@@ -348,9 +399,9 @@ export class AuthService {
         } else {
             // The backend returned an unsuccessful response code.
             // The response body may contain clues as to what went wrong,
-            console.error('Incorrect Email or Password');
+            console.error('Invalid Username or Password');
         }
         // return an observable with a user-facing error message
-        return throwError('Incorrect Email or Password');
+        return throwError('Invalid Username or Password');
     }
 }
