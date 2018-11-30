@@ -29,8 +29,6 @@ export class AuthGuard implements CanActivate {
      * Redirect an unauthenticated user to the login path.
      *
      * @returns the current user's authentication status
-     *
-     * @privateApi
      */
     private isAuthenticated(): boolean {
         if (this.authService.isAuthenticated()) {

@@ -34,8 +34,6 @@ export class RegisterComponent {
      * Create the `FormGroup` object with the needed input fields and their default values
      *
      * @returns a `FormGroup` object containing the relevant form controls
-     *
-     * @privateApi
      */
     private setRegistrationForm(): FormGroup {
         return this.fb.group({
@@ -50,8 +48,6 @@ export class RegisterComponent {
 
     /**
      * Respond to a form submission and delegate to the `register()` method
-     *
-     * @publicApi
      */
     onSubmit(): void {
         this.submitted = true;
@@ -59,7 +55,7 @@ export class RegisterComponent {
     }
 
     /**
-     * Extract the input values from the form submit a
+     * Extract the input values from the form and submit a
      * register request to the auth service.
      *
      * Create a 'RegistrationModel' from the extracted form values
@@ -73,8 +69,6 @@ export class RegisterComponent {
      *
      * If the response is successful, navigate to the `login` path,
      * or else display an error message.
-     *
-     * @privateApi
      */
     private register(): void {
         // remove any previous errors
@@ -115,14 +109,12 @@ export class RegisterComponent {
                 this.router.navigate(['/login']);
             },
             error => {
-                // invalid registration attempt
+                // invalid registration
+                console.log(error);
                 this.submitted = false;
 
                 // set the error message
                 this.errorMsg = error;
-
-                // log the error
-                console.log(error);
             }
         );
     }

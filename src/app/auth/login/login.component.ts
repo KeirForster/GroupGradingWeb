@@ -32,8 +32,6 @@ export class LoginComponent {
 
     /**
      * Respond to a form submission and delegate to the `login()` method
-     *
-     * @publicApi
      */
     onSubmit(): void {
         this.submitted = true;
@@ -44,8 +42,6 @@ export class LoginComponent {
      * Create the `FormGroup` object with the needed input fields and their default values
      *
      * @returns a `FormGroup` object containing the relevant form controls
-     *
-     * @privateApi
      */
     private setLoginForm(): FormGroup {
         return this.fb.group({
@@ -59,20 +55,18 @@ export class LoginComponent {
      * Extract the input values from the form and submit a
      * login request to the auth service.
      *
-     * Creates a 'CredentialModel' from the extracted form values
+     * Create a 'CredentialModel' from the extracted form values
      * to be passed to the auth service `login() method`.
      *
-     * Passes the `remember` value to the auth service `login()` method
+     * Pass the `remember` value to the auth service `login()` method
      * to determine whether or not to rememeber the user during their
      * next visit and to remain logged in (pending the token has not expired)
      *
-     * Subscribes to the auth service `login()` method to submit a login
+     * Subscribe to the auth service `login()` method to submit a login
      * request to the server.
      *
      * If the response is successful, navigate to the `home` path,
      * or else display an error message.
-     *
-     * @privateApi
      */
     private login(): void {
         // clear any previous errors
@@ -105,13 +99,11 @@ export class LoginComponent {
             },
             error => {
                 // invalid login attempt
+                console.log(error);
                 this.submitted = false;
 
                 // set the error message
                 this.errorMsg = error;
-
-                // log the error
-                console.log(error);
             }
         );
     }

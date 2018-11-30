@@ -37,8 +37,6 @@ export class AuthService {
      * @param remember whether or not to remember the user during their next visit
      *
      * @returns an `Observable` with a message upon success.
-     *
-     * @publicApi
      */
     login(user: CredentialModel, remember: boolean): Observable<string> {
         return this.http
@@ -59,8 +57,6 @@ export class AuthService {
 
     /**
      * Log the current user out.
-     *
-     * @publicApi
      */
     logout(): void {
         sessionStorage.removeItem(AuthService.TOKEN_NAME);
@@ -76,8 +72,6 @@ export class AuthService {
      * @param role the application role to be registered as
      *
      * @returns an `Observable` with a message upon success.
-     *
-     * @publicApi
      */
     register(
         user: RegistrationModel,
@@ -100,8 +94,6 @@ export class AuthService {
      * Check if the current user is authenticated.
      *
      * @returns the current user's authentication status
-     *
-     * @publicApi
      */
     isAuthenticated(): boolean {
         if (this.authenticated) {
@@ -136,8 +128,6 @@ export class AuthService {
      * @param roleName the name of the role to check
      *
      * @returns whether ir not the user is in the specified role
-     *
-     * @publicApi
      */
     isInRole(roleName: ApplicationRole): boolean {
         if (this.isAuthenticated()) {
@@ -163,8 +153,6 @@ export class AuthService {
      * Get the current user's username
      *
      * @returns the the current user's username or null if not authenticated
-     *
-     * @publicApi
      */
     getUsername(): string | null {
         if (this.isAuthenticated()) {
@@ -187,8 +175,6 @@ export class AuthService {
      * @param role the application role name to get the endpoint for
      *
      * @returns the the registration url for the specified application role
-     *
-     * @privateApi
      */
     private getRegistrationUrlGivenRole(role: ApplicationRole): string {
         switch (role) {
@@ -204,8 +190,6 @@ export class AuthService {
      * Retrieve a raw jwt token from the browser.
      *
      * @returns a raw jwt token or null if no jwt token is found
-     *
-     * @privateApi
      */
     private getRawToken(): string | null {
         const sessionStorageToken = sessionStorage.getItem(
@@ -241,8 +225,6 @@ export class AuthService {
      * @param rawToken the raw token to validate
      *
      * @returns whether or not the token is a jwt token
-     *
-     * @privateApi
      */
     private tokenIsJwtFormat(rawToken: string): boolean {
         if (!rawToken) {
@@ -266,8 +248,6 @@ export class AuthService {
      * @param parsedToken the parsed token to check
      *
      * @returns whether or not the token is expired
-     *
-     * @privateApi
      */
     private tokenIsExpired(parsedToken: TokenPayloadModel): boolean {
         // local date
@@ -299,8 +279,6 @@ export class AuthService {
      * @param rawToken the raw jwt token to parse
      *
      * @returns a `TokenPayloadModel` object
-     *
-     * @privateApi
      */
     private parseToken(rawToken: string): TokenPayloadModel {
         // decode token payload
@@ -361,8 +339,6 @@ export class AuthService {
      *
      * @param responseBody the body of the http response from the `login()` method
      * @param remember wether or not to remember the user during their next visit
-     *
-     * @privateApi
      */
     private storeToken(
         responseBody: LoginSuccessModel,
@@ -393,8 +369,6 @@ export class AuthService {
      * @param error the error from the `login()` method
      *
      * @returns an error of of type `Observabe<never>` with a message
-     *
-     * @privateApi
      */
     private handleError(error: HttpErrorResponse): Observable<never> {
         if (error.error instanceof ErrorEvent) {
