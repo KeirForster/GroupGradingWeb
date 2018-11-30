@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
         return this.fb.group({
             username: [null, [Validators.required]],
             password: [null, [Validators.required]],
-            remember: [null]
+            remember: [false]
         });
     }
 

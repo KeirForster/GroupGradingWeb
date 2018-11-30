@@ -328,6 +328,9 @@ export class AuthService {
             roles = [userRoles];
         }
 
+        // uid
+        const uid = payload.uid;
+
         // issuer
         const iss = payload.iss;
 
@@ -344,6 +347,7 @@ export class AuthService {
         const tokenModel = {
             sub: sub,
             roles: roles,
+            uid: uid,
             exp: exp,
             iss: iss,
             aud: aud
