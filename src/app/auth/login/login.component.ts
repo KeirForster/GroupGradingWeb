@@ -56,12 +56,15 @@ export class LoginComponent {
     }
 
     /**
-     * Extract the input values from the form and create a 'CredentialModel'
+     * Extract the input values from the form and submit a
+     * login request to the auth service.
+     *
+     * Creates a 'CredentialModel' from the extracted form values
      * to be passed to the auth service `login() method`.
      *
-     * Also passes a `boolean` to the auth service `login()` method to determine
-     * whether or not to rememeber the user during their next visit and to remain
-     * logged in (pending the token has not expirated)
+     * Passes the `remember` value to the auth service `login()` method
+     * to determine whether or not to rememeber the user during their
+     * next visit and to remain logged in (pending the token has not expired)
      *
      * Subscribes to the auth service `login()` method to submit a login
      * request to the server.

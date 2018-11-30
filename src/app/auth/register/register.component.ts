@@ -59,14 +59,17 @@ export class RegisterComponent {
     }
 
     /**
-     * Extract the input values from the form and create a 'RegistrationModel'
+     * Extract the input values from the form submit a
+     * register request to the auth service.
+     *
+     * Create a 'RegistrationModel' from the extracted form values
      * to be passed to the auth service `register() method`.
      *
-     * Also passes an `ApplicationRole` to the auth service `register()` method to determine
-     * the specified role to be registered for.
+     * Pass an `ApplicationRole` to the auth service `register()`
+     * method to determine the specified role to register for.
      *
-     * Subscribes to the auth service `register()` method to submit a registration
-     * request to the server.
+     * Subscribes to the auth service `register()` method to submit
+     * a registration request to the server.
      *
      * If the response is successful, navigate to the `login` path,
      * or else display an error message.
