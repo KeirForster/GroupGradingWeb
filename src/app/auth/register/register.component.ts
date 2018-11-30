@@ -42,7 +42,7 @@ export class RegisterComponent {
             lastName: [null, [Validators.required]],
             userName: [null, [Validators.required]],
             password: [null, [Validators.required, Validators.minLength(6)]],
-            role: ['student']
+            role: ['Student']
         });
     }
 

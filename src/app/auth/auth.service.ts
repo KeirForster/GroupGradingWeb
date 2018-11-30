@@ -180,9 +180,10 @@ export class AuthService {
         switch (role) {
             case ApplicationRole.Student:
                 return AuthService.STUDENT_REGISTER_URL;
-
+            case ApplicationRole.Teacher:
+                return AuthService.STUDENT_REGISTER_URL;
             default:
-                return AuthService.TEACHER_REGISTER_URL;
+                return AuthService.STUDENT_REGISTER_URL;
         }
     }
 
@@ -285,41 +286,26 @@ export class AuthService {
         const payloadBase64Url = rawToken.split('.')[1];
         const payload = JSON.parse(atob(payloadBase64Url));
 
-        // username
-        const sub = payload.sub;
-
-        // begining of UTC converted to local timezone
-        const exp = new Date(0);
-
-        // parsed token expiration in milliseconds
-        const payloadExpInMillis = payload.exp;
-
-        // add number of milliseconds to expiration
-        exp.setUTCSeconds(payloadExpInMillis);
+        // token expiration
+        const exp = new Date(0); // begining of UTC converted to local timezone
+        const payloadExpInMillis = payload.exp; // parsed token expiration in milliseconds
+        exp.setUTCSeconds(payloadExpInMillis); // add number of milliseconds to expiration
+        console.log(exp);
 
         // user roles
         let roles: ApplicationRole[];
         const userRoles = payload.roles;
+
         if (Array.isArray(userRoles)) {
             roles = userRoles;
         } else {
             roles = [userRoles];
         }
 
-        // uid
-        const uid = payload.uid;
-
-        // issuer
-        const iss = payload.iss;
-
-        // audience
-        const aud = payload.aud;
-
-        // set authentication status
-        this.authenticated = true;
-
-        // broadcast authentication status to all subscribers
-        this.authenticationStatus.next(true);
+        const sub = payload.sub; // subject
+        const uid = payload.uid; // uid
+        const iss = payload.iss; // issuer
+        const aud = payload.aud; // audience
 
         // create the token model
         const tokenModel = {
@@ -331,6 +317,11 @@ export class AuthService {
             aud: aud
         } as TokenPayloadModel;
 
+        // set authentication status
+        this.authenticated = true;
+
+        // broadcast authentication status to all subscribers
+        this.authenticationStatus.next(true);
         return tokenModel;
     }
 
