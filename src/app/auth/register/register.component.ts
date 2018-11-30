@@ -1,5 +1,5 @@
 // Angular modules
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 
@@ -13,8 +13,9 @@ import { RegistrationModel } from '../model/registration-model';
     templateUrl: './register.component.html',
     styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
-    readonly faSync: any; // sync icon for signin button
+export class RegisterComponent {
+    // animated sync icon for signup button
+    readonly faSync: any;
     readonly registerForm: FormGroup;
     submitted: boolean;
     errorMsg: string;
@@ -29,8 +30,13 @@ export class RegisterComponent implements OnInit {
         this.faSync = faSync;
     }
 
-    ngOnInit(): void {}
-
+    /**
+     * Create the `FormGroup` object with the needed input fields and their default values
+     *
+     * @returns a `FormGroup` object containing the relevant form controls
+     *
+     * @privateApi
+     */
     private setRegistrationForm(): FormGroup {
         return this.fb.group({
             email: [null, [Validators.required]],
@@ -42,15 +48,36 @@ export class RegisterComponent implements OnInit {
         });
     }
 
+    /**
+     * Respond to a form submission and delegate to the `register()` method
+     *
+     * @publicApi
+     */
     onSubmit(): void {
         this.submitted = true;
         this.register();
     }
 
+    /**
+     * Extract the input values from the form and create a 'RegistrationModel'
+     * to be passed to the auth service `register() method`.
+     *
+     * Also passes an `ApplicationRole` to the auth service `register()` method to determine
+     * the specified role to be registered for.
+     *
+     * Subscribes to the auth service `register()` method to submit a registration
+     * request to the server.
+     *
+     * If the response is successful, navigate to the `login` path,
+     * or else display an error message.
+     *
+     * @privateApi
+     */
     private register(): void {
         // remove any previous errors
         this.errorMsg = undefined;
 
+        // extract form values
         const email = this.registerForm.get('email').value;
         const firstName = this.registerForm.get('firstName').value;
         const lastName = this.registerForm.get('lastName').value;
@@ -58,6 +85,7 @@ export class RegisterComponent implements OnInit {
         const password = this.registerForm.get('password').value;
         const role = this.registerForm.get('role').value;
 
+        // log the values
         console.log(`email: ${email}`);
         console.log(`firstName: ${firstName}`);
         console.log(`lastName: ${lastName}`);
@@ -65,6 +93,7 @@ export class RegisterComponent implements OnInit {
         console.log(`password: ${password}`);
         console.log(`role: ${role}`);
 
+        // create register model
         const registrationModel = {
             email: email,
             firstName: firstName,
@@ -73,16 +102,24 @@ export class RegisterComponent implements OnInit {
             password: password
         } as RegistrationModel;
 
+        // submit register request
         this.authService.register(registrationModel, role).subscribe(
             res => {
                 // successful registration
                 console.log(res);
+
+                // redirect to login
                 this.router.navigate(['/login']);
             },
             error => {
-                // error
-                console.log(error);
+                // invalid registration attempt
                 this.submitted = false;
+
+                // set the error message
+                this.errorMsg = error;
+
+                // log the error
+                console.log(error);
             }
         );
     }
